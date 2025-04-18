@@ -1,8 +1,11 @@
 #include "maze.hpp"
 #include <raylib.h>
 #include <stack>
+#include <queue>
+#include <map>
 #include <random>
 #include <algorithm>
+#include <iostream>
 
 Maze::Maze(int width, int height): width(width), height(height)
 {
@@ -12,7 +15,7 @@ Maze::Maze(int width, int height): width(width), height(height)
 void Maze::generate()
 {
     std::stack<std::pair<int, int>> stack;
-    stack.push({0, 0});
+    stack.emplace(0, 0);
     grid[0][0].visited = true;
 
     std::random_device rd;  
@@ -22,17 +25,20 @@ void Maze::generate()
         auto [x, y] = stack.top();
 
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        draw(x, y);
+        ClearBackground(LIGHTGRAY);
+        drawGenerate(x, y);
         EndDrawing();
         WaitTime(0.01);
         
         std::vector<std::pair<int, int>> neighbors;
+        for (int i = 0; i < 4; ++i) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
 
-        if (y - 1 >= 0 && !grid[y-1][x].visited) neighbors.push_back({x, y - 1}); 
-        if (x + 1 < width && !grid[y][x + 1].visited) neighbors.push_back({x + 1, y});
-        if (y + 1 < height && !grid[y + 1][x].visited) neighbors.push_back({x, y + 1});
-        if (x - 1 >= 0 && !grid[y][x - 1].visited) neighbors.push_back({x - 1, y});
+            if (isValid(nx, ny)) {
+                neighbors.emplace_back(nx, ny);
+            }
+        }
 
         if (!neighbors.empty()) {
             std::uniform_int_distribution<> dist(0, neighbors.size() - 1);
@@ -41,16 +47,85 @@ void Maze::generate()
             auto [nx, ny] = neighbors[randomNumber];
             removeWall(x, y, nx, ny);
             grid[ny][nx].visited = true;
-            stack.push({nx, ny});
+            stack.emplace(nx, ny);
         } else {
             stack.pop();
         }
     } 
 }
 
-void Maze::solve()
+bool Maze::solveDFS(int x, int y)
 {
-    solve(0, 0);
+    grid[y][x].visited = true;
+
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+    drawSolve(x, y);
+    EndDrawing();
+    WaitTime(0.01);
+
+    if (x == width - 1 && y == height - 1) {
+        solutionPath.emplace_back(x, y);
+        return true;
+    }
+
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+
+        if (isValid(nx, ny) && !grid[y][x].walls[i]) {
+            if (solveDFS(nx, ny)) {
+                solutionPath.emplace_back(x, y);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Maze::solveBFS()
+{
+    std::queue<std::pair<int, int>> q;
+    std::map<std::pair<int, int>, std::pair<int, int>> parent;
+
+    q.emplace(0, 0);
+    grid[0][0].visited = true;
+
+    while (!q.empty()) {
+        auto [x, y] = q.front();
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        drawSolve(x, y); 
+        EndDrawing();
+        WaitTime(0.01);
+        
+        q.pop();
+
+        if (x == width - 1 && y == height - 1) {
+            std::pair<int, int> cur = {x, y};
+            while (cur != std::make_pair(0, 0)) {
+                solutionPath.push_back(cur);
+                cur = parent[cur];
+            }
+            solutionPath.emplace_back(0, 0);
+            std::reverse(solutionPath.begin(), solutionPath.end());
+            return true;
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (isValid(nx, ny) && !grid[y][x].walls[i]) {
+                q.emplace(nx, ny);
+                grid[ny][nx].visited = true;
+                parent[{nx, ny}] = {x, y};
+            }
+        }
+    }
+
+    return false;
 }
 
 void Maze::reset()
@@ -60,9 +135,10 @@ void Maze::reset()
             grid[y][x].visited = false;
         }
     }
+    solutionPath.clear();
 }
 
-void Maze::draw(int currentX, int currentY, bool solved)
+void Maze::drawGenerate(int currentX, int currentY)
 {
     int cellSize = 20;
     for (int y = 0; y < height; y++) {
@@ -70,14 +146,36 @@ void Maze::draw(int currentX, int currentY, bool solved)
             int px = x * cellSize;
             int py = y * cellSize;
 
-            if (solved) {
-                if (std::find(solutionPath.begin(), solutionPath.end(), std::pair{x, y}) != solutionPath.end()) {
-                    DrawRectangle(px, py, cellSize, cellSize, BLUE);
-                }
-            } else {
+            if (grid[y][x].visited) {
+                DrawRectangle(px, py, cellSize, cellSize, RAYWHITE);
+            }
+
+            if (x == currentX && y == currentY) {
+                DrawRectangle(px, py, cellSize, cellSize, BLUE);
+            }
+
+            if (grid[y][x].walls[0]) DrawRectangle(px, py, cellSize, 2, BLACK);
+            if (grid[y][x].walls[1]) DrawRectangle(px + cellSize - 1, py, 2, cellSize, BLACK);
+            if (grid[y][x].walls[2]) DrawRectangle(px, py + cellSize - 1, cellSize, 2, BLACK);
+            if (grid[y][x].walls[3]) DrawRectangle(px, py, 2, cellSize, BLACK);
+        }
+    }
+}
+
+void Maze::drawSolve(int currentX, int currentY)
+{
+    int cellSize = 20;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int px = x * cellSize;
+            int py = y * cellSize;
+
+            if (solutionPath.empty()) {
                 if (grid[y][x].visited) {
                     DrawRectangle(px, py, cellSize, cellSize, LIGHTGRAY);
                 }
+            } else if (std::find(solutionPath.begin(), solutionPath.end(), std::pair{x, y}) != solutionPath.end()) {
+                DrawRectangle(px, py, cellSize, cellSize, BLUE);
             }
 
             if (x == currentX && y == currentY) {
@@ -118,45 +216,7 @@ void Maze::removeWall(int x1, int y1, int x2, int y2)
     }
 }
 
-bool Maze::solve(int x, int y)
+bool Maze::isValid(int x, int y)
 {
-    if (x == width - 1 && y == height - 1) {
-        solutionPath.emplace_back(x, y);
-        return true;
-    }
-
-    grid[y][x].visited = true;
-
-    BeginDrawing();
-    ClearBackground(RAYWHITE);
-    draw(x, y);
-    EndDrawing();
-    WaitTime(0.01);
-
-    if (y - 1 >= 0 && !grid[y][x].walls[0] && !grid[y-1][x].visited) {
-        if (solve(x, y - 1)) {
-            solutionPath.emplace_back(x, y);
-            return true;
-        }  
-    }
-    if (x + 1 < width && !grid[y][x].walls[1] && !grid[y][x + 1].visited) {
-        if (solve(x + 1, y)) {
-            solutionPath.emplace_back(x, y);
-            return true;
-        } 
-    }
-    if (y + 1 < height && !grid[y][x].walls[2] && !grid[y+1][x].visited) {
-        if (solve(x, y + 1)) {
-            solutionPath.emplace_back(x, y);
-            return true;
-        }
-    }
-    if (x - 1 >= 0 && !grid[y][x].walls[3] && !grid[y][x - 1].visited) {
-        if (solve(x - 1, y)) {
-            solutionPath.emplace_back(x, y);
-            return true;
-        }
-    }
-    return false;
+    return (x >= 0 && y >= 0 && x < width && y < height && !grid[y][x].visited);
 }
-

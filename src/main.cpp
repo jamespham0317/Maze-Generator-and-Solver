@@ -1,6 +1,16 @@
 #include "maze.hpp"
 #include <raylib.h>
 
+void handleInput(Maze& maze) {
+    if (IsKeyDown(KEY_ONE)) {
+        maze.solveDFS();
+    } else if (IsKeyDown(KEY_TWO)) {
+        maze.solveBFS();
+    } else if (IsKeyDown(KEY_ENTER)) {
+        maze.reset();
+    }
+}
+
 int main() {
     const int width = 30;
     const int height = 30;
@@ -13,13 +23,13 @@ int main() {
 
     maze.generate();
     maze.reset();
-    maze.solve();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        maze.draw(-1, -1, true);
+        maze.drawSolve();
         EndDrawing();
+        handleInput(maze);
     }
 
     CloseWindow();
