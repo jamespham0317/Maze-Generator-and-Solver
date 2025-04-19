@@ -14,6 +14,8 @@ class Maze {
         void generate();
         bool solveDFS(int x = 0, int y = 0);
         bool solveBFS();
+        bool solveAStar();
+        bool solveWallFollower(bool leftHanded);
         void reset();
         void drawGenerate(int currentX = -1, int currentY = -1);
         void drawSolve(int currentX = -1, int currentY = -1);
@@ -25,4 +27,8 @@ class Maze {
         const int dy[4] = {-1, 0, 1, 0};
         void removeWall(int x1, int y1, int x2, int y2);
         bool isValid(int x, int y);
+        float heuristic(int x, int y);
+        int turnLeft(int dir);
+        int turnRight(int dir);
+        int turnBack(int dir);
 };

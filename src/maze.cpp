@@ -128,6 +128,116 @@ bool Maze::solveBFS()
     return false;
 }
 
+bool Maze::solveAStar()
+{
+    std::map<std::pair<int, int>, float> fScore;
+    std::vector<std::vector<float>> gScore(height, std::vector<float>(width, INFINITY));
+    std::map<std::pair<int, int>, std::pair<int, int>> parent;
+
+    gScore[0][0] = 0;
+    fScore[{0, 0}] = heuristic(0, 0);
+
+    auto cmp = [&](const std::pair<int, int>& a, const std::pair<int, int>& b) {
+        return fScore[a] > fScore[b];
+    };
+
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(cmp)> openSet(cmp);
+
+    openSet.push({0, 0});
+
+    while (!openSet.empty()) {
+        auto [x, y] = openSet.top();
+        openSet.pop();
+
+        if (grid[y][x].visited) continue;
+        grid[y][x].visited = true;
+
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        drawSolve(x, y);
+        EndDrawing();
+        WaitTime(0.01);
+
+        if (x == width - 1 && y == height - 1) {
+            std::pair<int, int> cur = {x, y};
+            while (cur != std::make_pair(0, 0)) {
+                solutionPath.push_back(cur);
+                cur = parent[cur];
+            }
+            solutionPath.emplace_back(0, 0);
+            std::reverse(solutionPath.begin(), solutionPath.end());
+            return true;
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (isValid(nx, ny) && !grid[y][x].walls[i]) {
+                float tentativeG = gScore[y][x] + 1;
+
+                if (tentativeG < gScore[ny][nx]) {
+                    gScore[ny][nx] = tentativeG;
+                    parent[{nx, ny}] = {x, y};
+                    fScore[{nx, ny}] = tentativeG + heuristic(nx, ny);
+                    openSet.push({nx, ny});
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Maze::solveWallFollower(bool leftHanded)
+{
+    int dir = RIGHT;  
+
+    std::vector<std::pair<int, int>> fullPath;
+    grid[0][0].visited = true;
+    fullPath.emplace_back(0, 0);
+
+    int x = 0, y = 0;
+    while (!(x == width - 1 && y == height - 1)) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        drawSolve(x, y);
+        EndDrawing();
+        WaitTime(0.01);
+
+        int preferred[4];
+
+        if (leftHanded) {
+            preferred[0] = turnLeft(dir);
+            preferred[1] = dir;
+            preferred[2] = turnRight(dir);
+            preferred[3] = turnBack(dir);
+        } else {
+            preferred[0] = turnRight(dir);
+            preferred[1] = dir;
+            preferred[2] = turnLeft(dir);
+            preferred[3] = turnBack(dir);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int ndir = preferred[i];
+            int nx = x + dx[ndir];
+            int ny = y + dy[ndir];
+
+            if (nx >= 0 && ny >= 0 && nx < width && ny < height && !grid[y][x].walls[ndir]) {
+                x = nx;
+                y = ny;
+                dir = ndir;
+                grid[y][x].visited = true;
+                fullPath.emplace_back(x, y);
+                break;
+            }
+        }
+    }
+    solutionPath = fullPath;
+    return true;
+}
+
 void Maze::reset()
 {
     for (int y = 0; y < height; y++) {
@@ -220,3 +330,12 @@ bool Maze::isValid(int x, int y)
 {
     return (x >= 0 && y >= 0 && x < width && y < height && !grid[y][x].visited);
 }
+
+float Maze::heuristic(int x, int y)
+{
+    return abs(x - (width - 1)) + abs(y - (height - 1));
+}
+
+int Maze::turnLeft(int dir) { return (dir + 3) % 4; }
+int Maze::turnRight(int dir) { return (dir + 1) % 4; }
+int Maze::turnBack(int dir) { return (dir + 2) % 4; }

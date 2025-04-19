@@ -3,11 +3,20 @@
 
 void handleInput(Maze& maze) {
     if (IsKeyDown(KEY_ONE)) {
+        maze.reset();
         maze.solveDFS();
     } else if (IsKeyDown(KEY_TWO)) {
-        maze.solveBFS();
-    } else if (IsKeyDown(KEY_ENTER)) {
         maze.reset();
+        maze.solveBFS();
+    } else if (IsKeyDown(KEY_THREE)) {
+        maze.reset();
+        maze.solveAStar();
+    } else if (IsKeyDown(KEY_FOUR)) {
+        maze.reset();
+        maze.solveWallFollower(true);
+    } else if (IsKeyDown(KEY_FIVE)) {
+        maze.reset();
+        maze.solveWallFollower(false);
     }
 }
 
