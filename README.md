@@ -10,7 +10,7 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 - Generators include:
   - Randomized Depth-First Search (DFS)
   - Randomized Prim's Algorithm
-  - Kruskal's Algorithm
+  - Randomized Kruskal's Algorithm
 - Solvers include:
   - Depth-First Search (DFS)
   - Breadth-First Search (BFS)
