@@ -39,7 +39,6 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 
 - C++ compiler (C++17 or later)
 - [Raylib](https://www.raylib.com/) (installed locally)
-- `make` (for building)
 
 ---
 
