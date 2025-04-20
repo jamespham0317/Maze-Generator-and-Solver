@@ -13,23 +13,28 @@ void handleInput(Maze& maze) {
         maze.solveAStar();
     } else if (IsKeyDown(KEY_FOUR)) {
         maze.reset();
-        maze.solveWallFollower(true);
+        maze.solveGreedyBFS();
     } else if (IsKeyDown(KEY_FIVE)) {
         maze.reset();
-        maze.solveWallFollower(false);
+        maze.solveWallFollower(0, 0, RIGHT, true);
+    } else if (IsKeyDown(KEY_SIX)) {
+        maze.reset();
+        maze.solveWallFollower(0, 0, RIGHT, false);
+    } else if (IsKeyDown(KEY_SEVEN)) {
+        maze.reset();
+        maze.solveDeadEndFiller();
     }
 }
 
 int main() {
-    const int width = 30;
+    const int width = 60;
     const int height = 30;
+    const int cellSize = 20;
 
-    InitWindow(20 * width, 20 * height, "Maze Generator and Solver");
-
-    Maze maze(width, height);
-
+    InitWindow(cellSize * width, cellSize * height, "Maze Generator and Solver");
     SetTargetFPS(60);
 
+    Maze maze(width, height, cellSize);
     maze.generate();
     maze.reset();
 
