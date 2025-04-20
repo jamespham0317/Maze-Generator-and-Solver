@@ -27,8 +27,8 @@ void handleInput(Maze& maze) {
 }
 
 int main() {
-    const int width = 60;
-    const int height = 30;
+    const int width = 20;
+    const int height = 20;
     const int cellSize = 20;
 
     InitWindow(cellSize * width, cellSize * height, "Maze Generator and Solver");
