@@ -2,27 +2,39 @@
 #include <raylib.h>
 
 void handleInput(Maze& maze) {
-    if (IsKeyDown(KEY_ONE)) {
-        maze.reset();
-        maze.solveDFS();
-    } else if (IsKeyDown(KEY_TWO)) {
-        maze.reset();
-        maze.solveBFS();
-    } else if (IsKeyDown(KEY_THREE)) {
-        maze.reset();
-        maze.solveAStar();
-    } else if (IsKeyDown(KEY_FOUR)) {
-        maze.reset();
-        maze.solveGreedyBFS();
-    } else if (IsKeyDown(KEY_FIVE)) {
-        maze.reset();
-        maze.solveWallFollower(0, 0, RIGHT, true);
-    } else if (IsKeyDown(KEY_SIX)) {
-        maze.reset();
-        maze.solveWallFollower(0, 0, RIGHT, false);
-    } else if (IsKeyDown(KEY_SEVEN)) {
-        maze.reset();
-        maze.solveDeadEndFiller();
+    if (!maze.isGenerated) {
+        if (IsKeyDown(KEY_D)) {
+            maze.generateDFS();
+        } else if (IsKeyDown(KEY_P)) {
+            maze.generatePrims();
+        } else if (IsKeyDown(KEY_K)) {
+            maze.generateKruskals();
+        }
+    } else {
+         if (IsKeyDown(KEY_ONE)) {
+            maze.resetMaze();
+            maze.solveDFS();
+        } else if (IsKeyDown(KEY_TWO)) {
+            maze.resetMaze();
+            maze.solveBFS();
+        } else if (IsKeyDown(KEY_THREE)) {
+            maze.resetMaze();
+            maze.solveAStar();
+        } else if (IsKeyDown(KEY_FOUR)) {
+            maze.resetMaze();
+            maze.solveGreedyBFS();
+        } else if (IsKeyDown(KEY_FIVE)) {
+            maze.resetMaze();
+            maze.solveWallFollower(0, 0, RIGHT, true);
+        } else if (IsKeyDown(KEY_SIX)) {
+            maze.resetMaze();
+            maze.solveWallFollower(0, 0, RIGHT, false);
+        } else if (IsKeyDown(KEY_SEVEN)) {
+            maze.resetMaze();
+            maze.solveDeadEndFiller();
+        } else if (IsKeyDown(KEY_ENTER)) {
+            maze.reset();
+        }
     }
 }
 
@@ -35,14 +47,9 @@ int main() {
     SetTargetFPS(60);
 
     Maze maze(width, height, cellSize);
-    maze.generate();
-    maze.reset();
 
     while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-        maze.drawSolve();
-        EndDrawing();
+        maze.animate();
         handleInput(maze);
     }
 
