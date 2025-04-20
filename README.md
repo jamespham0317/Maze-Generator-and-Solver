@@ -1,13 +1,16 @@
 # Maze Generator and Solver 
 
-An interactive maze generator and visual pathfinding tool written in C++ using [Raylib](https://www.raylib.com/). Mazes are generated using randomized Depth-First Search (DFS), and solved using a variety of algorithms with real-time animation.
+An interactive maze generator and visual pathfinding tool written in C++ using [Raylib](https://www.raylib.com/). Mazes are generated and solved using a variety of algorithms with real-time animation.
 
 ---
 
 ## Features
 
-- Maze generation with randomized DFS
-- Animated visualization of solving algorithms
+- Animated visualization of generation and solving algorithms
+- Generators include:
+  - Randomized Depth-First Search (DFS)
+  - Randomized Prim's Algorithm
+  - Kruskal's Algorithm
 - Solvers include:
   - Depth-First Search (DFS)
   - Breadth-First Search (BFS)
@@ -16,22 +19,26 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
   - Wall Follower (Left/Right Hand Rule)
   - Dead-End Filler
 - Real-time rendering with `raylib`
-- Keyboard input for switching solvers
+- Keyboard input for switching generators and solvers
 - Colored highlights for start, goal, visited, and solution paths
 
 ---
 
 ## Controls
 
-| Key        | Action                              |
-|------------|-------------------------------------|
-| `1`        | Solve using DFS                     |
-| `2`        | Solve using BFS                     |
-| `3`        | Solve using A*                      |
-| `4`        | Solve using Greedy BFS              |
-| `5`        | Solve using Left-Hand Wall Follower |
-| `6`        | Solve using Right-Hand Wall Follower|
-| `7`        | Solve using Dead-End Filler         |
+| Key           | Action                              |
+|---------------|-------------------------------------|
+| `G`           | Generate using DFS                  |
+| `P`           | Generate using Prim's Algorithm     |
+| `K`           | Generate using Kruskal's Algorithm  |
+| `1`           | Solve using DFS                     |
+| `2`           | Solve using BFS                     |
+| `3`           | Solve using A*                      |
+| `4`           | Solve using Greedy BFS              |
+| `5`           | Solve using Left-Hand Wall Follower |
+| `6`           | Solve using Right-Hand Wall Follower|
+| `7`           | Solve using Dead-End Filler         |
+| `↵` or `Enter`| Reset maze                          |
 
 ---
 
