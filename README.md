@@ -15,7 +15,6 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
   - Greedy Best-First Search
   - Wall Follower (Left/Right Hand Rule)
   - Dead-End Filler
-  - Bidirectional BFS
 - Real-time rendering with `raylib`
 - Keyboard input for switching solvers
 - Colored highlights for start, goal, visited, and solution paths
@@ -48,7 +47,7 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 
 ```bash
 # Clone the repo
-git clone https://github.com/jamespham0317/mazegeneratorandsolver.git
+git clone https://github.com/jamespham0317/Maze-Generator-and-Solver.git
 cd mazegeneratorandsolver
 
 # Build
