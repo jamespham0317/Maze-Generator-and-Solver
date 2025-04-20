@@ -38,7 +38,7 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 
 ## Requirements
 
-- C++17 or later
+- C++ compiler (C++17 or later)
 - [Raylib](https://www.raylib.com/) (installed locally)
 - `make` (for building)
 
@@ -48,11 +48,11 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/mazegeneratorandsolver.git
+git clone https://github.com/jamespham0317/mazegeneratorandsolver.git
 cd mazegeneratorandsolver
 
 # Build
 make
 
 # Run the program
-./maze
+./main
