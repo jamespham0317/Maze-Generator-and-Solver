@@ -121,7 +121,6 @@ void Maze::generateKruskals()
 
             grid[y1][x1].visited = true;
             grid[y2][x2].visited = true;
-            animate(x1, y1);
             animate(x2, y2);
         }
     }
@@ -371,6 +370,7 @@ bool Maze::solveDeadEndFiller()
 void Maze::reset() {
     grid.clear();
     grid.resize(height, std::vector<Cell>(width));
+    solutionPath.clear();
     isGenerated = false;
 }
 
