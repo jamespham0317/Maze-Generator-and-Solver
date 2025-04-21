@@ -1,12 +1,13 @@
 # Maze Generator and Solver 
 
-An interactive maze generator and visual pathfinding tool written in C++ using [Raylib](https://www.raylib.com/). Mazes are generated and solved using a variety of algorithms with real-time animation.
+An interactive maze generator and visual pathfinding tool written in C++ using [Raylib](https://www.raylib.com/). Mazes are generated and solved using a variety of algorithms with real-time animation and performance metrics.
 
 ---
 
 ## Features
 
 - Animated visualization of generation and solving algorithms
+- Displays **live runtime** and **number of visited nodes** during generation and solving
 - Generators include:
   - Randomized Depth-First Search (DFS)
   - Randomized Prim's Algorithm
