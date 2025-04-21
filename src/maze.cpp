@@ -121,14 +121,14 @@ void Maze::draw(int currentX, int currentY)
 
             Color tileColor;
             if (stage < 2) {
-                tileColor = DARKGRAY;
-                if (grid[y][x].visited) tileColor = BLACK;
+                tileColor = LIGHTGRAY;
+                if (grid[y][x].visited) tileColor = GRAY;
             } else {
-                tileColor = BLACK;
+                tileColor = GRAY;
                 if (isStart(x, y)) tileColor = GREEN;
-                else if (isGoal(x, y)) tileColor = RED;
-                else if (isInSolutionPath(x, y)) tileColor = BLUE;
-                else if (grid[y][x].visited && solutionPath.empty()) tileColor = DARKGRAY;
+                else if (isGoal(x, y)) tileColor = {255, 46, 67, 255};
+                else if (isInSolutionPath(x, y)) tileColor = {84, 182, 247, 255};
+                else if (grid[y][x].visited) tileColor = LIGHTGRAY;
             }
             if (x == currentX && y == currentY) tileColor = BLUE;
 
