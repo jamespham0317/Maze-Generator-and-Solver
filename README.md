@@ -7,7 +7,7 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 ## Features
 
 - Animated visualization of generation and solving algorithms
-- Displays **live runtime** and **number of visited nodes** during generation and solving
+- Displays live runtime and number of visited nodes during generation and solving
 - Generators include:
   - Randomized Depth-First Search (DFS)
   - Randomized Prim's Algorithm
