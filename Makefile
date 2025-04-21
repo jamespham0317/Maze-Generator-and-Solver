@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I/usr/local/include
 LDFLAGS = -L/usr/local/lib -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
-SRC = src/main.cpp src/maze.cpp
+SRC = src/main.cpp src/maze.cpp src/generator.cpp src/solver.cpp
 OBJ = $(SRC:.cpp=.o)
 TARGET = main
 

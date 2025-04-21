@@ -2,36 +2,39 @@
 #include <raylib.h>
 
 void handleInput(Maze& maze) {
-    if (!maze.isGenerated) {
+    if (maze.stage == 0) {
         if (IsKeyDown(KEY_D)) {
-            maze.generateDFS();
+            maze.generator = DFS;
+            maze.generate();
         } else if (IsKeyDown(KEY_P)) {
-            maze.generatePrims();
+            maze.generator = PRIMS;
+            maze.generate();
         } else if (IsKeyDown(KEY_K)) {
-            maze.generateKruskals();
+            maze.generator = KRUSKALS;
+            maze.generate();
         }
     } else {
          if (IsKeyDown(KEY_ONE)) {
-            maze.resetMaze();
-            maze.solveDFS();
+            maze.solver = DFS;
+            maze.solve();
         } else if (IsKeyDown(KEY_TWO)) {
-            maze.resetMaze();
-            maze.solveBFS();
+            maze.solver = BFS;
+            maze.solve();
         } else if (IsKeyDown(KEY_THREE)) {
-            maze.resetMaze();
-            maze.solveAStar();
+            maze.solver = ASTAR;
+            maze.solve();
         } else if (IsKeyDown(KEY_FOUR)) {
-            maze.resetMaze();
-            maze.solveGreedyBFS();
+            maze.solver = GREEDY;
+            maze.solve();
         } else if (IsKeyDown(KEY_FIVE)) {
-            maze.resetMaze();
-            maze.solveWallFollower(0, 0, RIGHT, true);
+            maze.solver = WALL_LEFT;
+            maze.solve();
         } else if (IsKeyDown(KEY_SIX)) {
-            maze.resetMaze();
-            maze.solveWallFollower(0, 0, RIGHT, false);
+            maze.solver = WALL_RIGHT;
+            maze.solve();
         } else if (IsKeyDown(KEY_SEVEN)) {
-            maze.resetMaze();
-            maze.solveDeadEndFiller();
+            maze.solver = DEAD_END;
+            maze.solve();
         } else if (IsKeyDown(KEY_ENTER)) {
             maze.reset();
         }
@@ -43,7 +46,7 @@ int main() {
     const int height = 20;
     const int cellSize = 20;
 
-    InitWindow(cellSize * width, cellSize * height, "Maze Generator and Solver");
+    InitWindow(cellSize * (width + 12), cellSize * (height + 12), "Maze Generator and Solver");
     SetTargetFPS(60);
 
     Maze maze(width, height, cellSize);
