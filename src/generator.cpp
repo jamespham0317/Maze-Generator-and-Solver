@@ -45,7 +45,7 @@ void Maze::generatePrims()
 
     int x = 0;
     int y = 0;
-    grid[0][0].visited = true;
+    grid[y][x].visited = true;
 
     for (int i = 0; i < 4; ++i) {
         int nx = x + dx[i];
