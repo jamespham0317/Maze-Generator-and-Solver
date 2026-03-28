@@ -29,7 +29,7 @@ An interactive maze generator and visual pathfinding tool written in C++ using [
 
 | Key           | Action                              |
 |---------------|-------------------------------------|
-| `G`           | Generate using DFS                  |
+| `D`           | Generate using DFS                  |
 | `P`           | Generate using Prim's Algorithm     |
 | `K`           | Generate using Kruskal's Algorithm  |
 | `1`           | Solve using DFS                     |

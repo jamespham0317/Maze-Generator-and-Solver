@@ -68,10 +68,10 @@ void handleInput(Maze &maze)
 
 int main(int argc, char **argv)
 {
-    const int cellSize = 20;
     const int SIDEBAR_W = 300;
     int width = (argc > 1) ? std::atoi(argv[1]) : 30;
     int height = (argc > 2) ? std::atoi(argv[2]) : 30;
+    int cellSize = (argc > 3) ? std::atoi(argv[3]) : 20;
 
     InitWindow(cellSize * (width + 12) + SIDEBAR_W, cellSize * (height + 12), "Maze Generator & Solver");
     SetTargetFPS(60);
